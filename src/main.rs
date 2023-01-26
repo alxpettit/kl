@@ -7,7 +7,7 @@ extern crate log;
 
 mod input;
 
-use input::{get_key_text, is_key_event, is_key_press, is_key_release, is_shift, InputEvent};
+use crate::input::{get_key_text, is_key_event, is_key_press, is_key_release, is_shift, InputEvent};
 
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
