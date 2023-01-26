@@ -2,7 +2,7 @@
 name = "keylogger"
 version = "0.0.1"
 authors = ["Gulshan Singh <gsingh2011@gmail.com>"]
-
+edition = "2015"
 [dependencies]
 getopts = "*"
 libc = "*"
