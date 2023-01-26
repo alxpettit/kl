@@ -1,7 +1,7 @@
 [package]
-name = "keylogger"
+name = "kl"
 version = "0.0.1"
-authors = ["Gulshan Singh <gsingh2011@gmail.com>"]
+authors = ["Gulshan Singh <gsingh2011@gmail.com>", "Alexandria P."]
 edition = "2021"
 [dependencies]
 getopts = "0.2.12"
