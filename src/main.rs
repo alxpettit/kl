@@ -7,7 +7,9 @@ extern crate log;
 
 mod input;
 
-use crate::input::{get_key_text, is_key_event, is_key_press, is_key_release, is_shift, InputEvent};
+use crate::input::{
+    get_key_text, is_key_event, is_key_press, is_key_release, is_shift, InputEvent,
+};
 
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
@@ -26,9 +28,9 @@ struct Config {
 
 impl Config {
     fn new(device_file: String, log_file: String) -> Self {
-        Config {
-            device_file: device_file,
-            log_file: log_file,
+        Self {
+            device_file,
+            log_file,
         }
     }
 }
