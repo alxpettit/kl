@@ -11,6 +11,7 @@ use crate::input::{
     get_key_text, is_key_event, is_key_press, is_key_release, is_shift, InputEvent,
 };
 
+use std::error::Error;
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
 use std::process::{exit, Command};
@@ -35,8 +36,8 @@ impl Config {
     }
 }
 
-fn main() {
-    root_check();
+fn main() -> Result<(), Box<dyn Error>> {
+    sudo::escalate_if_needed()?;
 
     env_logger::init().unwrap();
 
@@ -84,13 +85,13 @@ fn main() {
         }
     }
 }
-
-fn root_check() {
-    let euid = unsafe { libc::geteuid() };
-    if euid != 0 {
-        panic!("Must run as root user");
-    }
-}
+//
+// fn root_check() {
+//     let euid = unsafe { libc::geteuid() };
+//     if euid != 0 {
+//         panic!("Must run as root user");
+//     }
+// }
 
 fn parse_args() -> Config {
     fn print_usage(program: &str, opts: Options) {
