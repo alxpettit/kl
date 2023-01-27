@@ -28,7 +28,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "keylogger"
+name = "kl"
 version = "0.0.1"
 dependencies = [
  "env_logger",

@@ -13,7 +13,7 @@ use crate::input::{
 
 use std::error::Error;
 use std::fs::{File, OpenOptions};
-use std::io::{Read, Write};
+use std::io::{BufRead, Read, Write};
 use std::process::{exit, Command};
 use std::{env, mem};
 
@@ -34,6 +34,23 @@ impl Config {
             log_file,
         }
     }
+}
+
+fn read_input_event(file: &mut impl Read) -> std::io::Result<InputEvent> {
+    let mut buffer = [0u8; 24];
+    file.read_exact(&mut buffer)?;
+    let tv_sec = isize::from_le_bytes(buffer[0..8].try_into().unwrap());
+    let tv_usec = isize::from_le_bytes(buffer[8..16].try_into().unwrap());
+    let type_ = u16::from_le_bytes(buffer[16..18].try_into().unwrap());
+    let code = u16::from_le_bytes(buffer[18..20].try_into().unwrap());
+    let value = i32::from_le_bytes(buffer[20..24].try_into().unwrap());
+    Ok(InputEvent {
+        tv_sec,
+        tv_usec,
+        type_,
+        code,
+        value,
+    })
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -64,7 +81,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         if num_bytes != mem::size_of::<InputEvent>() {
             panic!("Error while reading from device file");
         }
-        let event: InputEvent = unsafe { mem::transmute(buf) };
+        let event: InputEvent = read_input_event(&mut device_file).unwrap(); //unsafe { mem::transmute(buf) };
         if is_key_event(event.type_) {
             if is_key_press(event.value) {
                 if is_shift(event.code) {
@@ -85,13 +102,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
 }
-//
-// fn root_check() {
-//     let euid = unsafe { libc::geteuid() };
-//     if euid != 0 {
-//         panic!("Must run as root user");
-//     }
-// }
 
 fn parse_args() -> Config {
     fn print_usage(program: &str, opts: Options) {
